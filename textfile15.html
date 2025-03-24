@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sazzadul Kader's Portfolio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        :root {
+            --bg-color: #87CEEB;
+            --text-color: #333333;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --accent-color: #1E90FF;
+            --hover-color: #4682B4;
+        }
+
+        body.brinjal-theme { --bg-color: #4B2E39; --text-color: #F5F5F5; --card-bg: rgba(255, 255, 255, 0.1); --accent-color: #8A2BE2; --hover-color: #BA55D3; }
+        body.bw-theme { --bg-color: #000000; --text-color: #FFFFFF; --card-bg: rgba(255, 255, 255, 0.15); --accent-color: #FFFFFF; --hover-color: #A9A9A9; }
+        body.yellow-theme { --bg-color: #FFFF99; --text-color: #333333; --card-bg: rgba(255, 255, 255, 0.9); --accent-color: #FFD700; --hover-color: #FFA500; }
+        body.light-green-theme { --bg-color: #98FF98; --text-color: #333333; --card-bg: rgba(255, 255, 255, 0.9); --accent-color: #32CD32; --hover-color: #228B22; }
+
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: background-color 0.5s ease, color 0.5s ease;
+            position: relative;
+            overflow-x: hidden;
+            padding-top: 80px;
+        }
+
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 10;
+            overflow: hidden;
+            transition: top 0.3s ease;
+        }
+
+        .top-bar.hidden {
+            top: -60px;
+        }
+
+        .ticker-container {
+            flex-grow: 1;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        #tickerText {
+            display: inline-block;
+            padding-left: 100%;
+            animation: tickerScroll 20s infinite linear;
+            font-size: 1.2em;
+            color: var(--text-color);
+        }
+
+        @keyframes tickerScroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+
+        .floating-objects {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .float-object {
+            position: absolute;
+            color: var(--text-color);
+            opacity: 0.5;
+        }
+
+        .float-object.dot {
+            width: 10px; /* Smaller circle for dots */
+            height: 10px;
+            background: var(--text-color);
+            border-radius: 50%;
+            font-size: 0; /* Removes text content */
+        }
+
+        .float-object.small-ball {
+            width: 15px;
+            height: 15px;
+            background: var(--text-color);
+            border-radius: 50%;
+            font-size: 0;
+        }
+
+        .float-object.big-ball {
+            width: 30px;
+            height: 30px;
+            background: var(--text-color);
+            border-radius: 50%;
+            font-size: 0;
+            opacity: 0.4;
+        }
+
+        body.light-green-theme .float-object.dot,
+        body.light-green-theme .float-object.small-ball,
+        body.light-green-theme .float-object.big-ball {
+            background: #FF0000;
+        }
+
+        .header {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .header-content {
+            text-align: center;
+            z-index: 1;
+            animation: elegantFadeIn 2s ease-out;
+            margin-top: -100px; /* Keeps the name moved upward */
+        }
+
+        @keyframes elegantFadeIn {
+            0% { opacity: 0; transform: translateY(50px) scale(0.95); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .header h1 { font-size: 3.5em; text-transform: uppercase; letter-spacing: 3px; color: var(--text-color); }
+        .header p { font-size: 1.2em; margin: 20px 0; color: var(--text-color); opacity: 0.9; }
+
+        .profile-pic-about {
+            margin-bottom: 20px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #aboutProfilePic {
+            width: 150px; /* Square size: equal width and height */
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--accent-color);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+            cursor: pointer;
+        }
+
+        #aboutProfilePic:hover {
+            transform: scale(1.05);
+            border-color: var(--hover-color);
+        }
+
+        #chooseProfilePic {
+            padding: 10px 20px;
+            background: var(--accent-color);
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            font-size: 1em;
+            display: none;
+        }
+
+        #chooseProfilePic.visible {
+            display: block;
+        }
+
+        #chooseProfilePic:hover {
+            background: var(--hover-color);
+            transform: scale(1.05);
+        }
+
+        .content {
+            padding: 80px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 40px;
+            margin: 20px 0;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            animation: cardRise 1.5s ease-out;
+            transition: transform 0.5s ease, box-shadow 0.5s ease, background 0.5s ease;
+        }
+
+        @keyframes cardRise {
+            0% { opacity: 0; transform: translateY(30px) rotateX(-10deg); }
+            100% { opacity: 1; transform: translateY(0) rotateX(0deg); }
+        }
+
+        .card:hover { transform: translateY(-10px) rotateX(5deg); box-shadow: 0 15px 30px rgba(0,0,0,0.4); }
+        .card h2 { color: var(--text-color); margin-bottom: 20px; cursor: pointer; }
+        .card-content { display: none; margin-top: 20px; transition: all 0.3s ease; }
+
+        .sub-card {
+            background: rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        body.brinjal-theme .sub-card, body.bw-theme .sub-card { background: rgba(255, 255, 255, 0.05); }
+        .sub-card:hover { transform: translateY(-5px); }
+        .sub-card h3 { color: var(--text-color); margin-bottom: 10px; }
+
+        .social-link {
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .social-link img { width: 24px; height: 24px; filter: invert(20%); transition: all 0.3s ease; }
+        body.brinjal-theme .social-link img, body.bw-theme .social-link img { filter: invert(100%); }
+        body.yellow-theme .social-link img, body.light-green-theme .social-link img { filter: invert(20%); }
+        .social-link:hover { background: var(--accent-color); transform: scale(1.2); }
+        .social-link:hover img { filter: invert(100%); }
+
+        .contact-form, .note-form, .post-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .contact-form input, .contact-form textarea, .note-form textarea, .post-form textarea, .post-form input[type="file"] {
+            padding: 10px;
+            border: 2px solid var(--accent-color);
+            border-radius: 5px;
+            font-size: 1em;
+            background: rgba(255, 255, 255, 0.8);
+            color: var(--text-color);
+            transition: border-color 0.3s ease, background 0.5s ease;
+        }
+
+        body.brinjal-theme .contact-form input, body.brinjal-theme .contact-form textarea,
+        body.brinjal-theme .note-form textarea, body.brinjal-theme .post-form textarea,
+        body.bw-theme .contact-form input, body.bw-theme .contact-form textarea,
+        body.bw-theme .note-form textarea, body.bw-theme .post-form textarea {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .contact-form input:focus, .contact-form textarea:focus, .note-form textarea:focus, .post-form textarea:focus {
+            border-color: var(--hover-color);
+            outline: none;
+        }
+
+        .contact-form textarea, .note-form textarea, .post-form textarea { resize: vertical; min-height: 100px; }
+        .contact-form button, .note-form button, .post-form button {
+            padding: 10px 20px;
+            background: var(--accent-color);
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .contact-form button:hover, .note-form button:hover, .post-form button:hover {
+            background: var(--hover-color);
+            transform: scale(1.05);
+        }
+
+        .success-message { display: none; color: var(--accent-color); margin-top: 10px; text-align: center; }
+
+        .post-list, #noteList { margin-top: 20px; }
+        .post-item { background: rgba(0, 0, 0, 0.05); padding: 15px; margin-bottom: 10px; border-radius: 10px; position: relative; }
+        body.brinjal-theme .post-item, body.bw-theme .post-item { background: rgba(255, 255, 255, 0.05); }
+        .post-item img { max-width: 100%; border-radius: 5px; }
+        .post-item video, .post-item audio { width: 100%; margin-top: 10px; }
+        .post-actions { margin-top: 10px; display: flex; gap: 10px; }
+        .post-actions button { padding: 5px 10px; font-size: 0.9em; background: var(--accent-color); color: white; border: none; border-radius: 5px; cursor: pointer; }
+        .post-actions button:hover { background: var(--hover-color); }
+        .like-button.liked { background: #ff4444; }
+        .like-count { margin-left: 5px; font-size: 0.9em; }
+
+        .qr-code-container {
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .qr-code-container img {
+            max-width: 150px;
+            border-radius: 5px;
+        }
+
+        .qr-code-container p {
+            margin-top: 10px;
+            color: var(--text-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar" id="topBar">
+        <div class="ticker-container">
+            <span id="tickerText">Welcome to Sazzadul Kader's Portfolio - Creative Professional | Innovator | Dreamer</span>
+        </div>
+    </div>
+
+    <div class="floating-objects" id="floatingObjects"></div>
+
+    <header class="header" id="home">
+        <div class="header-content">
+            <h1>Sazzadul Kader</h1>
+            <p>Creative Professional | Innovator | Dreamer</p>
+        </div>
+    </header>
+
+    <section class="content">
+        <div class="card" id="about">
+            <h2 onclick="toggleSection('aboutContent')">About Me</h2>
+            <div class="card-content" id="aboutContent">
+                <div class="sub-card">
+                    <h3>Background</h3>
+                    <div class="profile-pic-about">
+                        <img id="aboutProfilePic" src="https://via.placeholder.com/150" alt="Profile Picture">
+                        <input type="file" id="profilePicUpload" accept="image/*" style="display: none;" onchange="uploadAboutProfilePic(event)">
+                        <button id="chooseProfilePic" onclick="document.getElementById('profilePicUpload').click()">Choose</button>
+                    </div>
+                    <p>I'm a passionate individual from [Your Location], dedicated to creating unique digital experiences.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" id="education">
+            <h2 onclick="toggleSection('educationContent')">Education</h2>
+            <div class="card-content" id="educationContent">
+                <div class="sub-card">
+                    <h3>School</h3>
+                    <p>[Your School Name], [Location] <br> 2012 - 2016 <br> Completed secondary education.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" id="portfolio">
+            <h2 onclick="toggleSection('portfolioContent')">Portfolio</h2>
+            <div class="card-content" id="portfolioContent">
+                <div class="sub-card">
+                    <h3>Project 1</h3>
+                    <p>A web application showcasing responsive design.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" id="social">
+            <h2 onclick="toggleSection('socialContent')">Social Links</h2>
+            <div class="card-content" id="socialContent">
+                <div class="sub-card">
+                    <h3>Instagram</h3>
+                    <a href="https://instagram.com/sazzadulkader" target="_blank" class="social-link" aria-label="Instagram">
+                        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/instagram.svg" alt="Instagram">
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" id="contact">
+            <h2 onclick="toggleSection('contactContent')">Contact Me</h2>
+            <div class="card-content" id="contactContent">
+                <div class="sub-card">
+                    <h3>Email Me</h3>
+                    <form class="contact-form" id="contactForm" action="https://formspree.io/f/your-id" method="POST">
+                        <input type="text" name="name" placeholder="Your Name" required>
+                        <input type="email" name="email" placeholder="Your Email" required>
+                        <input type="tel" name="mobile" placeholder="Your Mobile Number" required>
+                        <textarea name="message" placeholder="Your Message" required></textarea>
+                        <button type="submit">Send Message</button>
+                        <p class="success-message" id="successMessage">Message sent successfully!</p>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" id="notes">
+            <h2 onclick="toggleSection('notesContent')">Notes</h2>
+            <div class="card-content" id="notesContent">
+                <div class="sub-card">
+                    <h3>Add a Note</h3>
+                    <form class="note-form" id="noteForm">
+                        <textarea name="note" placeholder="Write your note here" required></textarea>
+                        <button type="submit">Save Note</button>
+                    </form>
+                    <div id="noteList"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" id="posts">
+            <h2 onclick="toggleSection('postsContent')">Posts</h2>
+            <div class="card-content" id="postsContent">
+                <div class="sub-card">
+                    <h3>Create a Post</h3>
+                    <form class="post-form" id="postForm">
+                        <textarea name="postText" placeholder="What's on your mind?" required></textarea>
+                        <input type="file" id="postMedia" accept="image/*,video/*,audio/*" onchange="previewMedia(event)">
+                        <div id="mediaPreview"></div>
+                        <button type="submit">Post</button>
+                    </form>
+                    <div class="post-list" id="postList"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="qr-code-container">
+            <img id="qrCode" src="" alt="QR Code for Website">
+            <p>Scan this QR code to visit my website!</p>
+        </div>
+    </section>
+
+    <script>
+        // Floating Objects
+        const floatingObjects = document.getElementById('floatingObjects');
+        const objectCount = 30;
+        const types = ['dot', 'small-ball', 'big-ball'];
+
+        for (let i = 0; i < objectCount; i++) {
+            const obj = document.createElement('div');
+            const type = types[Math.floor(Math.random() * types.length)];
+            obj.className = `float-object ${type}`;
+
+            const startX = Math.random() * 100;
+            const startY = Math.random() * 100;
+            obj.style.left = `${startX}vw`;
+            obj.style.top = `${startY}vh`;
+
+            const duration = 20 + Math.random() * 10;
+            const delay = Math.random() * 10;
+
+            const x1 = Math.random() * 100 - startX;
+            const y1 = Math.random() * 100 - startY;
+            const x2 = Math.random() * 100 - startX;
+            const y2 = Math.random() * 100 - startY;
+
+            const animationName = `float${i}`;
+            const keyframes = `
+                @keyframes ${animationName} {
+                    0% { transform: translate(0, 0); opacity: 0.5; }
+                    33% { transform: translate(${x1}vw, ${y1}vh); opacity: 0.8; }
+                    66% { transform: translate(${x2}vw, ${y2}vh); opacity: 0.6; }
+                    100% { transform: translate(0, 0); opacity: 0.5; }
+                }
+            `;
+            const styleSheet = document.createElement('style');
+            styleSheet.textContent = keyframes;
+            document.head.appendChild(styleSheet);
+
+            obj.style.animation = `${animationName} ${duration}s infinite linear`;
+            obj.style.animationDelay = `${delay}s`;
+
+            floatingObjects.appendChild(obj);
+        }
+
+        // Toggle Section
+        function toggleSection(sectionId) {
+            const content = document.getElementById(sectionId);
+            content.style.display = (content.style.display === 'none' || content.style.display === '') ? 'block' : 'none';
+        }
+
+        // Theme Functions
+        function applyTheme(theme) {
+            const body = document.body;
+            body.classList.remove('brinjal-theme', 'bw-theme', 'yellow-theme', 'light-green-theme');
+            if (theme !== 'sky-blue') body.classList.add(`${theme}-theme`);
+            localStorage.setItem('theme', theme);
+        }
+
+        function startAutoThemeChange() {
+            const themes = ['sky-blue', 'brinjal', 'bw', 'yellow', 'light-green'];
+            let currentIndex = 0;
+            setInterval(() => {
+                applyTheme(themes[currentIndex]);
+                currentIndex = (currentIndex + 1) % themes.length;
+            }, 15000);
+        }
+
+        // Contact Form
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            const successMessage = document.getElementById('successMessage');
+            successMessage.style.display = 'block';
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+                this.reset();
+            }, 3000);
+        });
+
+        // Note Feature
+        document.getElementById('noteForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const noteText = this.querySelector('textarea').value;
+            const noteDiv = document.createElement('div');
+            noteDiv.className = 'post-item';
+            noteDiv.innerHTML = `
+                <p>${noteText}</p>
+                <div class="post-actions">
+                    <button class="like-button" onclick="toggleLike(this)">Like</button>
+                    <span class="like-count">0</span>
+                    <button onclick="deleteItem(this)">Delete</button>
+                </div>
+            `;
+            document.getElementById('noteList').appendChild(noteDiv);
+            this.reset();
+        });
+
+        // Post Feature
+        document.getElementById('postForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const text = this.querySelector('textarea').value;
+            const file = document.getElementById('postMedia').files[0];
+            const postDiv = document.createElement('div');
+            postDiv.className = 'post-item';
+            postDiv.innerHTML = `
+                <p>${text}</p>
+                <div class="post-actions">
+                    <button class="like-button" onclick="toggleLike(this)">Like</button>
+                    <span class="like-count">0</span>
+                    <button onclick="deleteItem(this)">Delete</button>
+                </div>
+            `;
+            
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    if (file.type.startsWith('image/')) {
+                        postDiv.querySelector('p').insertAdjacentHTML('afterend', `<img src="${e.target.result}" alt="Post Image">`);
+                    } else if (file.type.startsWith('video/')) {
+                        postDiv.querySelector('p').insertAdjacentHTML('afterend', `<video controls><source src="${e.target.result}" type="${file.type}"></video>`);
+                    } else if (file.type.startsWith('audio/')) {
+                        postDiv.querySelector('p').insertAdjacentHTML('afterend', `<audio controls><source src="${e.target.result}" type="${file.type}"></audio>`);
+                    }
+                    document.getElementById('postList').appendChild(postDiv);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                document.getElementById('postList').appendChild(postDiv);
+            }
+            this.reset();
+            document.getElementById('mediaPreview').innerHTML = '';
+        });
+
+        function previewMedia(event) {
+            const file = event.target.files[0];
+            const preview = document.getElementById('mediaPreview');
+            preview.innerHTML = '';
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    if (file.type.startsWith('image/')) {
+                        preview.innerHTML = `<img src="${e.target.result}" style="max-width: 100px; border-radius: 5px;">`;
+                    } else if (file.type.startsWith('video/')) {
+                        preview.innerHTML = `<video src="${e.target.result}" style="max-width: 100px;" controls></video>`;
+                    } else if (file.type.startsWith('audio/')) {
+                        preview.innerHTML = `<audio src="${e.target.result}" controls></audio>`;
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Delete and Like Functions
+        function deleteItem(button) {
+            button.parentElement.parentElement.remove();
+        }
+
+        function toggleLike(button) {
+            const likeCount = button.nextElementSibling;
+            let count = parseInt(likeCount.textContent);
+            if (button.classList.contains('liked')) {
+                count--;
+                button.classList.remove('liked');
+            } else {
+                count++;
+                button.classList.add('liked');
+            }
+            likeCount.textContent = count;
+        }
+
+        // Profile Picture Upload and Toggle Button
+        const profilePic = document.getElementById('aboutProfilePic');
+        const chooseButton = document.getElementById('chooseProfilePic');
+
+        profilePic.addEventListener('click', function() {
+            chooseButton.classList.toggle('visible');
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!profilePic.contains(e.target) && !chooseButton.contains(e.target)) {
+                chooseButton.classList.remove('visible');
+            }
+        });
+
+        function uploadAboutProfilePic(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    document.getElementById('aboutProfilePic').src = e.target.result;
+                    chooseButton.classList.remove('visible');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Hide/Show Top Bar on Scroll
+        let lastScrollTop = 0;
+        window.addEventListener('scroll', function() {
+            const topBar = document.getElementById('topBar');
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+            if (scrollTop > lastScrollTop) {
+                topBar.classList.add('hidden');
+            } else {
+                topBar.classList.remove('hidden');
+            }
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+        });
+
+        // QR Code Generation
+        function generateQRCode() {
+            const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(window.location.href)}`;
+            document.getElementById('qrCode').src = qrCodeUrl;
+        }
+
+        // Initialize
+        window.onload = function() {
+            const savedTheme = localStorage.getItem('theme') || 'sky-blue';
+            applyTheme(savedTheme);
+            startAutoThemeChange();
+            generateQRCode();
+        };
+    </script>
+</body>
+</html>
